@@ -14,5 +14,27 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $comicsArr = config('comics');
+    $navBar = config('nav');
+    return view('home', ['comicsArr' => $comicsArr,], ['navBar' => $navBar]);
 });
+
+Route::get('/{id}', function ($id) {
+    $comic = null;
+    $navBar = config('nav');
+    $comicsArr = config('comics');
+    foreach (config('comics') as $value) {
+        if ($value['id'] == $id) {
+            $comic = $value;
+            break;
+        }
+    }
+
+    if ($comic) {
+        return view('comic', ['pageTitle' => 'Fumetto', 'comic' => $comic, 'navBar' => $navBar]);
+    } else {
+        abort(404);
+    }
+
+})->name('comic');
+
